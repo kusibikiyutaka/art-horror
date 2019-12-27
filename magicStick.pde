@@ -9,8 +9,8 @@ Movie mov_hono, mov_kaze, mov_zimen, mov_mizu;
 Movie mv[]=new Movie[4]; //動画の入れ物を本数分作る
 Movie playing;//再生中の動画入れ
 
-//アウトプットする動画のサイズ
-int w = 1080, h = 720;
+//アウトプットする動画のサイズ。BenQの解像度
+int w = 1920, h = 1080;
 
 void playRandomMovie() {//ランダムに動画を再生する
   if (playing!=null) {//再生中なら止める
