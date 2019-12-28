@@ -8,12 +8,7 @@ Serial arduinoSerial;
 Movie mv[]=new Movie[4];
 int Playing_ID = -1;
 int Serial_Val = -1;
-static final String OS_NAME = System.getProperty("os.name").toLowerCase();
-
-// windows serial port
-static final int WINDOWS_PORT = 0;
-// osx serial port
-static final String OSX_PORT = "/dev/cu.usbmodem14101";
+static final int USE_PORT = 0;
 
 
 
@@ -26,11 +21,7 @@ void setup() {
   drawSerialList();
   
   // Serial connect
-  if (OS_NAME.startsWith("mac")) {
-    arduinoSerial = new Serial(this, OSX_PORT, 9600);
-  } else if (OS_NAME.startsWith("windows")) {
-    arduinoSerial = new Serial(this, Serial.list()[WINDOWS_PORT], 9600);
-  }
+  arduinoSerial = new Serial(this, Serial.list()[USE_PORT], 9600);
 
   mv[0]=new Movie(this, "hono.mp4");
   mv[1]=new Movie(this, "kaze.mp4");
