@@ -1,10 +1,8 @@
-// シリアルライブラリを取り入れる
-import processing.serial.*;
-// Serial1というインスタンスを用意
-Serial Serial1;
+import processing.serial.*;// シリアルライブラリを取り入れる
+Serial Serial1;// Serial1というインスタンスを用意
 
-import processing.video.*;
-Movie mov_hono, mov_kaze, mov_zimen, mov_mizu;
+import processing.video.*;//ビデオライブラリを取り入れる
+//Movie mov_hono, mov_kaze, mov_zimen, mov_mizu;
 
 Movie mv[]=new Movie[4]; //動画の入れ物を本数分作る
 Movie playing;//再生中の動画入れ
@@ -20,24 +18,17 @@ void playRandomMovie() {//ランダムに動画を再生する
   playing.play();//再生開始
 }
 
-/*
-void settings() {
- size(w, h);
- }
- */
-
-int m;
+int value;
 
 void serialEvent(Serial p) {
-  //変数xにシリアル通信で読み込んだ値を代入
-  m = p.read();
-  println(m);
+  //変数valueにシリアル通信で読み込んだ値を代入
+  value = p.read();
+  println(value);
 }
 
 void setup() {
   size(1920, 1080); 
-  // シリアルポートの設定
-  Serial1 = new Serial(this, "/dev/cu.usbmodem14101", 9600);
+  Serial1 = new Serial(this, "/dev/cu.usbmodem14101", 9600);  // シリアルポートの設定
 
   mv[0]=new Movie(this, "hono.mov");
   mv[1]=new Movie(this, "kaze.mov");
@@ -46,22 +37,22 @@ void setup() {
 }
 
 void draw() {
-  //background(0);
-  if (m >= 1) { 
+  value = Serial1.read();
+  if (value == 1) { 
     if (playing == null) {//再生中でなければ再生開始
       playRandomMovie();
     } else {
-      //      if (playing != null) { //再生中なら描画処理
-      //        (playing, 0, 0, 1920, 1080);
-      if (playing.duration()-playing.time()<0.01) { //一本分再生終了?
+      if (playing.duration() == playing.time()) { //一本分再生終了
+        //image(playing, 0, 0, 1920, 1080); 
+        playing = null;
         playRandomMovie();//次をランダム再生
       }
     }
-    }
-    }
-    //}
+  }
+  background(0);
+}
 
 
-    void movieEvent(Movie m) {
-      m.read();//動画更新
-    }
+void movieEvent(Movie m) {
+  m.read();//動画更新
+}
