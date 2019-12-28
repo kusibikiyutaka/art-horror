@@ -52,6 +52,7 @@ void draw() {
     if (!isPlaying()) {
       playRandomMovie();
     }
+    Serial_Val = -1;
   }
   
   if (isPlaying()) {
