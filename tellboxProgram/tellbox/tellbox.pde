@@ -82,7 +82,7 @@ void setup(){
    
   audio = new Minim(this);  
   audio_player = audio.loadFile("利用する音データの名前.mp3");
-  movie.play();
+  //movie.play();
    
    alpha = 0;
    fadeMode = false;
@@ -314,6 +314,3 @@ void pushSound(){
   println("push!");
   delay(50);
 }
-
-
-
