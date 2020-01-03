@@ -59,10 +59,7 @@ void loop() {
       delay(10);
       serialSend(a);
       delay(10);
-      
-      }
-      
-   }
+}
 
 /**
  * 加速度センサーの値を取得する関数
