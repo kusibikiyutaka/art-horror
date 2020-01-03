@@ -7,19 +7,23 @@
  getrainみたいな、便利関数を作ってあげて、メインの処理をわかりやすくする
  str関数...floatとかを文字列表現に変える。
  電話ボックスのコード。
-   [jsonデータ、キーボードの入力、動画再生]
+   [jsonデータ、キーボードの入力、動画再生の切り替え、プッシュ音]
  **/
 
 //音のライブラリ
 import ddf.minim.*;
+
 //ムービングライトへのOSC通信ライブラリ
 import oscP5.*;
 import netP5.*;
+
 //Resolumeへの通信ライブラリ(Windows:spout  OSX:syphon)
 import spout.*;
 //import codeanticode.syphon.*;
+
 //動画再生のライブラリ
 import processing.video.*;
+
 //シリアル通信のライブラリ
 //import processing.serial.*;
 
@@ -31,8 +35,10 @@ NetAddress netAdd;
 Spout spout;
 //SyphonServer syphon;
 Movie mov_disa, mov_sto, mov_clo, mov_sun;
-//Movie mov_hono, mov_kaze, mov_zimen, mov_mizu;
+//Movie mv[]=new Movie[4];
 //Serial serial;
+//int Playing_ID = -1;
+//static final int USE_PORT = 0;
 
 
 JSONObject  jobject;
@@ -50,7 +56,7 @@ boolean disa_play, sto_play, clo_play, sun_play;
 float w = 4080, h = 768;
 
 void setup(){
-  //serial = new Serial(this, "/dev/cu.usbmodem14101", 9600);
+  //serial = new Serial(this, Serial.list()[USE_PORT], 9600);
   //serial.bufferUntil(10);
   
   //spout = new Spout(this);
@@ -66,7 +72,7 @@ void setup(){
   //パナソニック(1920*1080)*2
   //キャノン(1920*1200)*2
    //size(3840, 1200);  
-   size(4080, 768, P2D);  //Spout、Syphon
+   size(4080, 768, P2D); 
    //mov_disa = new Movie(this, "disaster.mp4");
    //mov_sto = new Movie(this, "storm.avi");
    //mov_clo = new Movie(this, "cloudy.avi");
@@ -75,10 +81,14 @@ void setup(){
    mov_sto = new Movie(this, "storm.mp4");
    mov_clo = new Movie(this, "cloudy.mp4");
    mov_sun = new Movie(this, "sunny.mp4");
+   //mv[0]=new Movie(this, "hono.mp4");
+   //mv[1]=new Movie(this, "kaze.mp4");
+   //mv[2]=new Movie(this, "zimen.mp4");
+   //mv[3]=new Movie(this, "mizu.mp4");
    
-  audio = new Minim(this);  
-  audio_player = audio.loadFile("test.mp3");
-  //movie.play();
+   
+   audio = new Minim(this);  
+   audio_player = audio.loadFile("test.mp3");
    
    alpha = 0;
    fadeMode = false;
