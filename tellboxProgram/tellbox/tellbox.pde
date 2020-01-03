@@ -18,7 +18,7 @@ import oscP5.*;
 import netP5.*;
 
 //Resolumeへの通信ライブラリ(Windows:spout  OSX:syphon)
-import spout.*;
+//import spout.*;
 //import codeanticode.syphon.*;
 
 //動画再生のライブラリ
@@ -32,7 +32,7 @@ Minim audio;
 AudioPlayer audio_player;
 OscP5 oscP5;
 NetAddress netAdd;
-Spout spout;
+//Spout spout;
 //SyphonServer syphon;
 //Serial serial;
 Movie mv[]=new Movie[4];
@@ -53,8 +53,8 @@ void setup(){
   //serial = new Serial(this, Serial.list()[USE_PORT], 9600);
   //serial.bufferUntil(10);
   
-   spout = new Spout(this);
-   spout.createSender("Spout!!!");
+   //spout = new Spout(this);
+   //spout.createSender("Spout!!!");
   //syphon = new SyphonServer(this, "Syphon!!!");
   
    jobject = loadJSONObject("data.json");
@@ -70,6 +70,9 @@ void setup(){
    mv[1]=new Movie(this, "kaze.mp4");
    mv[2]=new Movie(this, "zimen.mp4");
    mv[3]=new Movie(this, "mizu.mp4");
+   
+   Playing_ID = 0;
+   playMovie();
    
    //osc[0]=new OscMessage();
       
@@ -89,8 +92,9 @@ void draw(){
     }
     permitPlaying = false;
   }
-    
+    if(isPlaying()){
   image(mv[Playing_ID], 0, 0);
+    }
  
   //spout.sendTexture();
   //syphon.sendScreen();  
@@ -102,7 +106,7 @@ void draw(){
 // jsonデータを参照。return 0 > xの場合、値なし。
 float getDate(String date) {
   JSONArray jarray = jobject.getJSONArray("NAME");
-  JSONObject datejobject = jobject.getJSONObject("Get DateData");
+  JSONObject datejobject = jobject.getJSONObject("DATE");
   float pixie = -1.0f;
   
   for( int i = 0; i < jarray.size(); i++ ){
@@ -187,10 +191,8 @@ void playMovie(){
 
 
 boolean isPlaying() {
-  return mv[Playing_ID].duration() - mv[Playing_ID].time() > 0;
+  return mv[Playing_ID].duration() - mv[Playing_ID].time() > 0.01;
 }
-
-
 
 void movieEvent(Movie m) {
  //カレント位置の動画を取得
