@@ -1,15 +1,3 @@
- //  AE-BMX055             Arduino UNO                             //
-    //    VCC                    +5V                                  //
-    //    GND                    GND                                  //
-    //    SDA                    A4(SDA)                              //
-    //    SCL                    A5(SCL)                              //
-    //                                                                //
-    //   (JP6,JP4,JP5はショートした状態)                              //
-    //   http://akizukidenshi.com/catalog/g/gK-13010/                 //
-
-
-
-
 #include<Wire.h>
   // BMX055　加速度センサのI2Cアドレス
 #define Addr_Accl 0x19  // (JP1,JP2,JP3 = Openの時)
@@ -76,28 +64,6 @@ void loop() {
       
    }
 
-//しきい値を超えたら、processingにシリアル通信：1
-void serialSend(Angle a){
-     if((a.ax >= 8.7)||(a.ax <= -9.8 )){
-       Serial.write(100);
-       Serial.print("ax Send Serial 1 !!!");
-       delay(10);
-     }else if((a.ay >= 9.5)||(a.ay <= -9.5 )){
-       Serial.write(100);
-       Serial.print("ay Send Serial 1 !!!");
-       delay(10);
-     }else if((a.ay >= 9.0)||(a.ay <= -9.8 )){
-       Serial.write(100);
-       Serial.print("az Send Serial 1 !!!");
-       delay(10);
-     }else{
-       Serial.write(0);
-       Serial.print("No Send Serial ..........");
-       delay(10);
-       
-     }
-  }
-
 /**
  * 加速度センサーの値を取得する関数
  */
@@ -161,6 +127,28 @@ void showCoordinate(Coordinate c) {
   Serial.println(c.cz);
 
 }
+
+//しきい値を超えたら、processingにシリアル通信：1
+void serialSend(Angle a){
+     if((a.ax >= 8.7)||(a.ax <= -9.8 )){
+       Serial.write(100);
+       Serial.print("ax Send Serial 1 !!!");
+       delay(10);
+     }else if((a.ay >= 9.5)||(a.ay <= -9.5 )){
+       Serial.write(100);
+       Serial.print("ay Send Serial 1 !!!");
+       delay(10);
+     }else if((a.ay >= 9.0)||(a.ay <= -9.8 )){
+       Serial.write(100);
+       Serial.print("az Send Serial 1 !!!");
+       delay(10);
+     }else{
+       Serial.write(0);
+       Serial.print("No Send Serial ..........");
+       delay(10);
+       
+     }
+  }
 
 
 
