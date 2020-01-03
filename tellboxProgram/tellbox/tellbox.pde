@@ -12,36 +12,33 @@
 
 //音のライブラリ
 import ddf.minim.*;
-Minim audio;
-AudioPlayer audio_player;
- 
-//OSC通信のライブラリ
+//ムービングライトへのOSC通信ライブラリ
 import oscP5.*;
 import netP5.*;
-OscP5 oscP5;
-NetAddress netAdd;
-
-//Resolumeへのライブラリ
+//Resolumeへの通信ライブラリ(Windows:spout  OSX:syphon)
 import spout.*;
-Spout spout;
 //import codeanticode.syphon.*;
-//SyphonServer syphon;
-
 //動画再生のライブラリ
 import processing.video.*;
+//シリアル通信のライブラリ
+//import processing.serial.*;
+
+
+Minim audio;
+AudioPlayer audio_player;
+OscP5 oscP5;
+NetAddress netAdd;
+Spout spout;
+//SyphonServer syphon;
 Movie mov_disa, mov_sto, mov_clo, mov_sun;
 //Movie mov_hono, mov_kaze, mov_zimen, mov_mizu;
+//Serial serial;
 
 
 JSONObject  jobject;
-//import processing.serial.*;
-//Serial serial;
-
 String keys = "";
-
 float alpha;
 boolean fadeMode;
-
 //disaster, storm, cloudy, sunny
 boolean disa, sto, clo, sun;
 //boolean hono, kaze, zimen, mizu;
@@ -66,9 +63,8 @@ void setup(){
    //一台のPCで完結するIPアドレス。自身のIPアドレスを参照。
    netAdd = new NetAddress("127.0.0.1", 10000);
    
-  //パナソニック(1920*1080)3台分のプロジェクションサイズ。
-  //キャノン(1920*1200)3台分のプロジェクションサイズ。
-  //キャノン2台分のプロジェクションサイズ
+  //パナソニック(1920*1080)*2
+  //キャノン(1920*1200)*2
    //size(3840, 1200);  
    size(4080, 768, P2D);  //Spout、Syphon
    //mov_disa = new Movie(this, "disaster.mp4");
@@ -81,7 +77,7 @@ void setup(){
    mov_sun = new Movie(this, "sunny.mp4");
    
   audio = new Minim(this);  
-  audio_player = audio.loadFile("利用する音データの名前.mp3");
+  audio_player = audio.loadFile("test.mp3");
   //movie.play();
    
    alpha = 0;
