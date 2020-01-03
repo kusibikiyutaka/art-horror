@@ -18,7 +18,7 @@ import oscP5.*;
 import netP5.*;
 
 //Resolumeへの通信ライブラリ(Windows:spout  OSX:syphon)
-//import spout.*;
+import spout.*;
 //import codeanticode.syphon.*;
 
 //動画再生のライブラリ
@@ -32,7 +32,7 @@ Minim audio;
 AudioPlayer audio_player;
 OscP5 oscP5;
 NetAddress netAdd;
-//Spout spout;
+Spout spout;
 //SyphonServer syphon;
 //Serial serial;
 Movie mv[]=new Movie[4];
@@ -53,8 +53,8 @@ void setup(){
   //serial = new Serial(this, Serial.list()[USE_PORT], 9600);
   //serial.bufferUntil(10);
   
-   //spout = new Spout(this);
-   //spout.createSender("Spout!!!");
+   spout = new Spout(this);
+   spout.createSender("Spout!!!");
   //syphon = new SyphonServer(this, "Syphon!!!");
   
    jobject = loadJSONObject("data.json");
