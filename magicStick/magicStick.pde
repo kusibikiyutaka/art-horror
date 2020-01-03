@@ -21,6 +21,7 @@ void setup() {
   drawSerialList();
   
   // Serial connect
+  //  "/dev/cu.usbmodem14101"
   arduinoSerial = new Serial(this, Serial.list()[USE_PORT], 9600);
 
   mv[0]=new Movie(this, "hono.mp4");
