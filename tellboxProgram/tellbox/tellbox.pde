@@ -9,18 +9,25 @@
  電話ボックスのコード。
    [jsonデータ、キーボードの入力、動画再生]
  **/
+
+//音のライブラリ
+import ddf.minim.*;
+Minim audio;
+AudioPlayer audio_player;
  
- 
+//OSC通信のライブラリ
 import oscP5.*;
 import netP5.*;
 OscP5 oscP5;
 NetAddress netAdd;
 
-//import spout.*;
-//Spout spout;
+//Resolumeへのライブラリ
+import spout.*;
+Spout spout;
 //import codeanticode.syphon.*;
 //SyphonServer syphon;
 
+//動画再生のライブラリ
 import processing.video.*;
 Movie mov_disa, mov_sto, mov_clo, mov_sun;
 //Movie mov_hono, mov_kaze, mov_zimen, mov_mizu;
@@ -38,6 +45,7 @@ boolean fadeMode;
 //disaster, storm, cloudy, sunny
 boolean disa, sto, clo, sun;
 //boolean hono, kaze, zimen, mizu;
+
 boolean disa_play, sto_play, clo_play, sun_play;
 //boolean hono_play, kaze_play, zimen_play, mizu_play;
 
@@ -71,6 +79,10 @@ void setup(){
    mov_sto = new Movie(this, "storm.mp4");
    mov_clo = new Movie(this, "cloudy.mp4");
    mov_sun = new Movie(this, "sunny.mp4");
+   
+  audio = new Minim(this);  
+  audio_player = audio.loadFile("利用する音データの名前.mp3");
+  movie.play();
    
    alpha = 0;
    fadeMode = false;
@@ -264,12 +276,6 @@ void changeMovie(){
 }
 
 
-void movieEvent(Movie m) {
- //カレント位置の動画を取得
- m.read();
-}  
-
-
   //キーボードで数値入力
 void keyPressed(){
   switch( key ){
@@ -291,4 +297,23 @@ void keyPressed(){
           //  text(str(getRain(keys)), 0, 0, width, height);
           //  break;
   }
+  
+  pushSound();
+  
 }
+
+
+void movieEvent(Movie m) {
+ //カレント位置の動画を取得
+ m.read();
+}  
+
+void pushSound(){
+  audio_player.rewind() ;
+  audio_player.play();
+  println("push!");
+  delay(50);
+}
+
+
+
