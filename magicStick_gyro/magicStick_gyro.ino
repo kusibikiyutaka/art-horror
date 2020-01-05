@@ -2,11 +2,13 @@
   // BMX055　加速度センサのI2Cアドレス
 #define Addr_Accl 0x19  // (JP1,JP2,JP3 = Openの時)
 
-    // センサーの値を保存するグローバル関数
-    float xAccl = 0.00;
-    float yAccl = 0.00;
-    float zAccl = 0.00;
+#define min_threshold = -9.8;
+#define max_threshold = 8.7;
 
+// センサーの値を保存するグローバル関数
+float xAccl = 0.00;
+float yAccl = 0.00;
+float zAccl = 0.00;
     
     /* 加速度センサの値の構造体 */
     struct Coordinate {
@@ -126,28 +128,36 @@ void showCoordinate(Coordinate c) {
 }
 
 //しきい値を超えたら、processingにシリアル通信：1
-void serialSend(Angle a){
-     if((a.ax >= 8.7)||(a.ax <= -9.8 )){
-       Serial.write(100);
-       Serial.print("ax Send Serial 1 !!!");
-       delay(10);
-     }else if((a.ay >= 9.5)||(a.ay <= -9.5 )){
-       Serial.write(100);
-       Serial.print("ay Send Serial 1 !!!");
-       delay(10);
-     }else if((a.ay >= 9.0)||(a.ay <= -9.8 )){
-       Serial.write(100);
-       Serial.print("az Send Serial 1 !!!");
-       delay(10);
-     }else{
-       Serial.write(0);
-       Serial.print("No Send Serial ..........");
-       delay(10);
-       
-     }
-  }
+void serialSend(Angle a)　{
 
-
+    if ((a.ax >= min_threshold) || (a.ax <= min_threshold)) {
+      Serial.write(1);
+      Serial.print("ax Send Serial 1 !!!");
+      delay(10);
+    } else {
+      Serial.write(0);
+      Serial.print(" send >> 0");
+      delay(10);
+    }
+    
+//     if((a.ax >= 8.7)||(a.ax <= -9.8 )){
+//       Serial.write(100);
+//       Serial.print("ax Send Serial 1 !!!");
+//       delay(10);
+//     }else if((a.ay >= 9.5)||(a.ay <= -9.5 )){
+//       Serial.write(100);
+//       Serial.print("ay Send Serial 1 !!!");
+//       delay(10);
+//     }else if((a.ay >= 9.0)||(a.ay <= -9.8 )){
+//       Serial.write(100);
+//       Serial.print("az Send Serial 1 !!!");
+//       delay(10);
+//     }else{
+//       Serial.write(0);
+//       Serial.print("No Send Serial ..........");
+//       delay(10);
+//     }
+}
 
 void BMX055_Init()
 {
@@ -172,11 +182,10 @@ void BMX055_Init()
 }
 
 
-void BMX055_Accl()
-{
+void BMX055_Accl() {
   int data[6];
-  for (int i = 0; i < 6; i++)
-  {
+  for (int i = 0; i < 6; i++) {
+    
     Wire.beginTransmission(Addr_Accl);
     Wire.write((2 + i));// Select data register
     Wire.endTransmission();
