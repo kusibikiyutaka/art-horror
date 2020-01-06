@@ -94,6 +94,8 @@ void draw(){
   }
     if(isPlaying()){
   image(mv[Playing_ID], 0, 0);
+    }else{
+      sendOscIndex();
     }
  
   //spout.sendTexture();
@@ -121,34 +123,54 @@ float getDate(String date) {
     if(pixie >= 30){
      Playing_ID = 0;
      OscMessage msg = new OscMessage("/sequence");
-     msg.add(255,0,0,0);
+   msg.add(255);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
      oscP5.send(msg, netAdd);
      println("mv >>> "+ Playing_ID);
      
     }else if(pixie < 30 && pixie >= 15){
      Playing_ID = 1;
      OscMessage msg = new OscMessage("/sequence");
-     msg.add(0,255,0,0);
+   msg.add(0);
+   msg.add(255);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
      oscP5.send(msg, netAdd);
      println("mv >>> "+ Playing_ID);
      
     }else if(pixie < 15 && pixie > 0){
      Playing_ID = 2;
      OscMessage msg = new OscMessage("/sequence");
-     msg.add(0,0,255,0);
+   msg.add(0);
+   msg.add(0);
+   msg.add(255);
+   msg.add(0);
+   msg.add(0);
      oscP5.send(msg, netAdd);
      println("mv >>> "+ Playing_ID);
      
     }else if(pixie == 0){
      Playing_ID = 3;
      OscMessage msg = new OscMessage("/sequence");
-     msg.add(0,0,0,255);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
+   msg.add(255);
+   msg.add(0);
      oscP5.send(msg, netAdd);
      println("mv >>> "+ Playing_ID);
      
     }else{
      OscMessage msg = new OscMessage("/sequence");
-     msg.add(0,0,0,0);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
      oscP5.send(msg, netAdd);
      println("No Movie......");
   }  
@@ -192,6 +214,17 @@ void playMovie(){
 
 boolean isPlaying() {
   return mv[Playing_ID].duration() - mv[Playing_ID].time() > 0.01;
+}
+
+void sendOscIndex(){
+   OscMessage msg = new OscMessage("/sequence");
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
+   msg.add(255);
+   oscP5.send(msg, netAdd);
+   println("send Osc Index !!!");
 }
 
 void movieEvent(Movie m) {
