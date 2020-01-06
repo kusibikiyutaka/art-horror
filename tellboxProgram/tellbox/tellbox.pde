@@ -29,7 +29,7 @@ import processing.video.*;
 
 
 Minim audio;
-AudioPlayer audio_player;
+AudioPlayer push_audio, error_audio, success_audio;
 OscP5 oscP5;
 NetAddress netAdd;
 Spout spout;
@@ -77,11 +77,14 @@ void setup(){
    //osc[0]=new OscMessage();
       
    audio = new Minim(this);  
-   audio_player = audio.loadFile("test.mp3");
+   push_audio = audio.loadFile("test.mp3");
+   //error_audio = audio.loadFile("error.mp3");
+   //success_audio = audio.loadFile("success.mp3");
 
    frameRate(60);
    
    permitPlaying = false;
+   
 }
 
 void draw(){
@@ -129,6 +132,7 @@ float getDate(String date) {
    msg.add(0);
    msg.add(0);
      oscP5.send(msg, netAdd);
+     successSound();
      println("mv >>> "+ Playing_ID);
      
     }else if(pixie < 30 && pixie >= 15){
@@ -140,6 +144,7 @@ float getDate(String date) {
    msg.add(0);
    msg.add(0);
      oscP5.send(msg, netAdd);
+     successSound();
      println("mv >>> "+ Playing_ID);
      
     }else if(pixie < 15 && pixie > 0){
@@ -151,6 +156,7 @@ float getDate(String date) {
    msg.add(0);
    msg.add(0);
      oscP5.send(msg, netAdd);
+     successSound();
      println("mv >>> "+ Playing_ID);
      
     }else if(pixie == 0){
@@ -162,6 +168,7 @@ float getDate(String date) {
    msg.add(255);
    msg.add(0);
      oscP5.send(msg, netAdd);
+     successSound();
      println("mv >>> "+ Playing_ID);
      
     }else{
@@ -172,6 +179,7 @@ float getDate(String date) {
    msg.add(0);
    msg.add(0);
      oscP5.send(msg, netAdd);
+     errorSound();
      println("No Movie......");
   }  
   return pixie;   
@@ -233,8 +241,22 @@ void movieEvent(Movie m) {
 }  
 
 void pushSound(){
-  audio_player.rewind() ;
-  audio_player.play();
+  push_audio.rewind() ;
+  push_audio.play();
   println("push!");
+  delay(50);
+}
+
+void errorSound(){
+  error_audio.rewind() ;
+  error_audio.play();
+  println("error......");
+  delay(50);
+}
+
+void successSound(){
+  success_audio.rewind() ;
+  success_audio.play();
+  println("success!!!!!!");
   delay(50);
 }
