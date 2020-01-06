@@ -130,7 +130,7 @@ void showCoordinate(Coordinate c) {
 void serialSendValue(int val) {
     if ((val >= min_threshold) || (val <= min_threshold)) {
       Serial.write(1);
-      Serial.print("ax Send Serial 1 !!!");
+      //Serial.print("ax Send Serial 1 !!!");
       delay(10);
     }
 }
