@@ -2,8 +2,12 @@
   // BMX055　加速度センサのI2Cアドレス
 #define Addr_Accl 0x19  // (JP1,JP2,JP3 = Openの時)
 
+<<<<<<< HEAD
 //しきい値
 #define min_threshold 15
+=======
+#define min_threshold -9.8
+>>>>>>> ee02cf921593fb62ea119eb80a9ab60e3b252fc5
 #define max_threshold 8.7
 
 // センサーの値を保存するグローバル関数
@@ -30,7 +34,7 @@ void setup() {
    // Wire(Arduino-I2C)の初期化
     Wire.begin();
     // デバック用シリアル通信
-    Serial.begin(115200);
+    Serial.begin(9600);
     //BMX055 初期化
     BMX055_Init();
     delay(300);
@@ -60,7 +64,11 @@ void loop() {
       //BMX055 加速度の読み取り
       BMX055_Accl();
       delay(10);
+<<<<<<< HEAD
       serialSendValue(c.cz);
+=======
+      serialSendValue(a.ax);
+>>>>>>> ee02cf921593fb62ea119eb80a9ab60e3b252fc5
       delay(10);
 }
 
@@ -128,10 +136,15 @@ void showCoordinate(Coordinate c) {
 
 }
 
+<<<<<<< HEAD
 void serialSendValue(long val) {
 //  Serial.println(val);
 //  return;
     if (val >= min_threshold) {
+=======
+void serialSendValue(int val) {
+    if ((val >= min_threshold) || (val <= min_threshold)) {
+>>>>>>> ee02cf921593fb62ea119eb80a9ab60e3b252fc5
       Serial.write(1);
       //Serial.print("ax Send Serial 1 !!!");
       delay(10);
