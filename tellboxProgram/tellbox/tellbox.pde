@@ -53,8 +53,8 @@ void setup(){
   //serial = new Serial(this, Serial.list()[USE_PORT], 9600);
   //serial.bufferUntil(10);
   
-   spout = new Spout(this);
-   spout.createSender("Spout!!!");
+   //spout = new Spout(this);
+   //spout.createSender("Spout!!!");
   //syphon = new SyphonServer(this, "Syphon!!!");
   
    jobject = loadJSONObject("data.json");
@@ -78,8 +78,8 @@ void setup(){
       
    audio = new Minim(this);  
    push_audio = audio.loadFile("test.mp3");
-   //error_audio = audio.loadFile("error.mp3");
-   //success_audio = audio.loadFile("success.mp3");
+   error_audio = audio.loadFile("error.mp3");
+   success_audio = audio.loadFile("success.mp3");
 
    frameRate(60);
    
@@ -97,15 +97,15 @@ void draw(){
   }
     if(isPlaying()){
   image(mv[Playing_ID], 0, 0);
-    }else{
+    }else if(notPlaying()){
       sendOscIndex();
-    }
- 
+      delay(10);
+    }     
   //spout.sendTexture();
   //syphon.sendScreen();  
 }
 
-  
+
   
 /*ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー*/
 // jsonデータを参照。return 0 > xの場合、値なし。
@@ -224,6 +224,12 @@ boolean isPlaying() {
   return mv[Playing_ID].duration() - mv[Playing_ID].time() > 0.01;
 }
 
+boolean notPlaying() {
+  return mv[Playing_ID].duration() - mv[Playing_ID].time() == 0;
+}
+
+
+
 void sendOscIndex(){
    OscMessage msg = new OscMessage("/sequence");
    msg.add(0);
@@ -241,21 +247,21 @@ void movieEvent(Movie m) {
 }  
 
 void pushSound(){
-  push_audio.rewind() ;
+  push_audio.rewind();
   push_audio.play();
   println("push!");
   delay(50);
 }
 
 void errorSound(){
-  error_audio.rewind() ;
+  error_audio.rewind();
   error_audio.play();
   println("error......");
   delay(50);
 }
 
 void successSound(){
-  success_audio.rewind() ;
+  success_audio.rewind();
   success_audio.play();
   println("success!!!!!!");
   delay(50);
