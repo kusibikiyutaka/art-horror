@@ -8,21 +8,22 @@ Serial arduinoSerial;
 Movie mv[]=new Movie[4];
 int Playing_ID = -1;
 int Serial_Val = -1;
-static final int USE_PORT = 0;
+static final int USE_PORT = 1;
 
 
 
 
 
 void setup() {
-  size(1920, 1080);
+  fullScreen(2);
+  //size(1920, 1080);
   
   // draw serial list
   drawSerialList();
   
   // Serial connect
-  // 櫛引のMacBookのシリアルポートは、　"/dev/cu.usbmodem14101"
-  arduinoSerial = new Serial(this, Serial.list()[USE_PORT], 9600);
+  // 櫛引のMacBookのシリアルポートは、　"/dev/cu.usbmodem14101"   Serial.list()[USE_PORT]
+  arduinoSerial = new Serial(this, "/dev/cu.usbmodem14101", 115200);
 
   mv[0]=new Movie(this, "hono.mp4");
   mv[1]=new Movie(this, "kaze.mp4");
@@ -38,7 +39,7 @@ void setup() {
 void draw() {
   background(0);
   
-  Serial_Val = arduinoSerial.read();
+  //Serial_Val = arduinoSerial.read();
   
   if (Serial_Val == 1) {
     if (!isPlaying()) {
@@ -55,6 +56,7 @@ void draw() {
 
 
 void playRandomMovie() {
+  
   mv[Playing_ID].stop();
   
   Playing_ID = getRdmVideoIndex();
@@ -81,6 +83,8 @@ void drawSerialList() {
 
 void serialEvent(Serial p) {
   Serial_Val = p.read();
+  println(Serial_Val);
+  delay(500);
 }
 
 void movieEvent(Movie m) {

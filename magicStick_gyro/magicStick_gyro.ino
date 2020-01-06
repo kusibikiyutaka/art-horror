@@ -2,8 +2,9 @@
   // BMX055　加速度センサのI2Cアドレス
 #define Addr_Accl 0x19  // (JP1,JP2,JP3 = Openの時)
 
-#define min_threshold = -9.8;
-#define max_threshold = 8.7;
+//しきい値
+#define min_threshold 15
+#define max_threshold 8.7
 
 // センサーの値を保存するグローバル関数
 float xAccl = 0.00;
@@ -36,7 +37,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("--------------------------------------");
+//  Serial.println("--------------------------------------");
 
    Coordinate c = getCoordinate();
    
@@ -54,12 +55,12 @@ void loop() {
     //Accl= -1.06,1.19,-10.52
     
       Angle a = angleCalculation(c);
-      showAngle(a);
+//      showAngle(a);
 
       //BMX055 加速度の読み取り
       BMX055_Accl();
       delay(10);
-      serialSend(a);
+      serialSendValue(c.cz);
       delay(10);
 }
 
@@ -107,56 +108,34 @@ Angle angleCalculation(Coordinate c){
  * 角度を表示する関数
  */
 void showAngle(Angle a) {
-  Serial.print(a.ax);
-  Serial.print(",");
-  Serial.print(a.ay);
-  Serial.print(",");
-  Serial.println(a.az);
+//  Serial.print(a.ax);
+//  Serial.print(",");
+//  Serial.print(a.ay);
+//  Serial.print(",");
+//  Serial.println(a.az);
 }
     
 /**
  * 加速度センサーの値を表示する関数
  */
 void showCoordinate(Coordinate c) {
-  Serial.print("x:");
-  Serial.print(c.cx);
-  Serial.print(" y:");
-  Serial.print(c.cy);
-  Serial.print(" z:");
-  Serial.println(c.cz);
+//  Serial.print("x:");
+//  Serial.print(c.cx);
+//  Serial.print(" y:");
+//  Serial.print(c.cy);
+//  Serial.print(" z:");
+//  Serial.println(c.cz);
 
 }
 
-//しきい値を超えたら、processingにシリアル通信：1
-void serialSend(Angle a)　{
-
-    if ((a.ax >= min_threshold) || (a.ax <= min_threshold)) {
+void serialSendValue(long val) {
+//  Serial.println(val);
+//  return;
+    if (val >= min_threshold) {
       Serial.write(1);
-      Serial.print("ax Send Serial 1 !!!");
-      delay(10);
-    } else {
-      Serial.write(0);
-      Serial.print(" send >> 0");
+      //Serial.print("ax Send Serial 1 !!!");
       delay(10);
     }
-    
-//     if((a.ax >= 8.7)||(a.ax <= -9.8 )){
-//       Serial.write(100);
-//       Serial.print("ax Send Serial 1 !!!");
-//       delay(10);
-//     }else if((a.ay >= 9.5)||(a.ay <= -9.5 )){
-//       Serial.write(100);
-//       Serial.print("ay Send Serial 1 !!!");
-//       delay(10);
-//     }else if((a.ay >= 9.0)||(a.ay <= -9.8 )){
-//       Serial.write(100);
-//       Serial.print("az Send Serial 1 !!!");
-//       delay(10);
-//     }else{
-//       Serial.write(0);
-//       Serial.print("No Send Serial ..........");
-//       delay(10);
-//     }
 }
 
 void BMX055_Init()
