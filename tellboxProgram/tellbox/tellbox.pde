@@ -53,8 +53,8 @@ void setup(){
   //serial = new Serial(this, Serial.list()[USE_PORT], 9600);
   //serial.bufferUntil(10);
   
-   //spout = new Spout(this);
-   //spout.createSender("Spout!!!");
+   spout = new Spout(this);
+   spout.createSender("Spout!!!");
   //syphon = new SyphonServer(this, "Syphon!!!");
   
    jobject = loadJSONObject("data.json");
