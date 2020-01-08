@@ -33,6 +33,9 @@ int Playing_ID = -1;
 static final int USE_PORT = 0;
 boolean permitPlaying;
 
+float alpha;
+boolean fadeMode;
+
 //日付データ
 JSONObject  jobject;
 String keys = "";
@@ -59,7 +62,8 @@ void setup(){
    mv[2]=new Movie(this, "hono.mp4");
    mv[3]=new Movie(this, "kaze.mp4");
    mv[4]=new Movie(this, "zimen.mp4");
-
+  
+   fadeMode = false;
    Playing_ID = 0;
    playMovie();
          
@@ -72,6 +76,13 @@ void setup(){
 
 void draw(){
   background(0,0,0);
+  
+  if(fadeMode == true){
+    fadeIn();
+  }else if(fadeMode == false){
+    fadeOut();
+  }
+  
   //ゼロ映像が再生されてて、エンターキーを押したら、playMovie
   if(permitPlaying && !isPlaying()){
       playMovie();
@@ -88,6 +99,12 @@ void draw(){
     sendOscIndex();
     delay(10);
   }
+  
+  //フェードに使う手前の画面
+  colorMode(RGB,256);
+  noStroke();
+  fill(0,0,0,alpha);
+  rect(0, 0, 5760, 1080);
     
   //spout.sendTexture();
   //syphon.sendScreen();  
@@ -131,7 +148,7 @@ float getDate(String date) {
      errorSound();
      Playing_ID = 0;  //ゼロ映像
   }  
-  
+  fadeMode = true;
   println("mv >>> "+ Playing_ID);
 
   return pixie;   
@@ -265,4 +282,25 @@ void successSound(){
   success_audio.play();
   println("success!!!!!!");
   delay(10);
+}
+
+
+//黒の画像がフェードインしてくる
+void fadeIn(){
+  alpha += 6;
+  //println("Movie fadeOut now...");
+  if(fadeMode == true && alpha > 255){
+  alpha = 255;
+  fadeMode = false;
+  //println("START fadeOut");
+  }
+}
+
+//黒の画像がフェードアウトしてくる
+void fadeOut(){
+  //println("Movie fadeIn now...");
+  alpha -= 6;
+  if(alpha < 0){
+  alpha = 0;
+  }
 }
