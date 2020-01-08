@@ -4,8 +4,6 @@
  * @auther MSLABO
  * @version 1.0 2019/01
  
- getrainみたいな、便利関数を作ってあげて、メインの処理をわかりやすくする
- str関数...floatとかを文字列表現に変える。
  電話ボックスのコード。
    [jsonデータ、テンキー入力、動画の切り替え、ムービングライトのOSC通信、プッシュ音]
  **/
@@ -24,24 +22,16 @@ import spout.*;
 //動画再生のライブラリ
 import processing.video.*;
 
-//シリアル通信のライブラリ
-//import processing.serial.*;
-
-
 Minim audio;
 AudioPlayer error_audio, success_audio, push_audio;
 OscP5 oscP5;
 NetAddress netAdd;
-Spout spout;
+//Spout spout;
 //SyphonServer syphon;
-//Serial serial;
-Movie mv[]=new Movie[4];
+Movie mv[]=new Movie[5];
 int Playing_ID = -1;
 static final int USE_PORT = 0;
 boolean permitPlaying;
-
-//OscMessage osc[]=new OscMessage[4];
-
 
 //日付データ
 JSONObject  jobject;
@@ -51,11 +41,8 @@ String keys = "";
 float w = 4080, h = 768;
 
 void setup(){
-  //serial = new Serial(this, Serial.list()[USE_PORT], 9600);
-  //serial.bufferUntil(10);
-  
-   spout = new Spout(this);
-   spout.createSender("Spout!!!");
+   //spout = new Spout(this);
+   //spout.createSender("Spout!!!");
   //syphon = new SyphonServer(this, "Syphon!!!");
   
    jobject = loadJSONObject("data.json");
@@ -67,40 +54,41 @@ void setup(){
   //パナソニック(1920*1080)、キャノン(1920*1200)
   //4080(1360*3)*768
    size(4080, 768, P2D); 
-   mv[0]=new Movie(this, "hono.mp4");
-   mv[1]=new Movie(this, "kaze.mp4");
-   mv[2]=new Movie(this, "zimen.mp4");
-   mv[3]=new Movie(this, "mizu.mp4");
-   
+   mv[0]=new Movie(this, "zero.mp4");
+   mv[1]=new Movie(this, "mizu.mp4");
+   mv[2]=new Movie(this, "hono.mp4");
+   mv[3]=new Movie(this, "kaze.mp4");
+   mv[4]=new Movie(this, "zimen.mp4");
+
    Playing_ID = 0;
    playMovie();
-   
-   //osc[0]=new OscMessage();
-      
+         
    audio = new Minim(this);  
    error_audio = audio.loadFile("error.mp3");
    success_audio = audio.loadFile("success.mp3");
    
    frameRate(60);
-   
-   permitPlaying = false;
-   
 }
 
 void draw(){
   background(0,0,0);
-  if(permitPlaying){
-    if(!isPlaying()){
+  //ゼロ映像が再生されてて、エンターキーを押したら、playMovie
+  if(permitPlaying && !isPlaying()){
       playMovie();
-    }
-    permitPlaying = false;
-  }
-    if(isPlaying()){
-  image(mv[Playing_ID], 0, 0);
-    }else if(notPlaying()){
-      sendOscIndex();
-      delay(10);
     }     
+  permitPlaying = false;
+ 
+  
+  if(isPlaying()){
+    image(mv[Playing_ID], 0, 0);
+    sendOscIndex();
+    delay(10);
+  }else if(!isPlaying()){
+    image(mv[0], 0, 0);
+    sendOscIndex();
+    delay(10);
+  }
+    
   //spout.sendTexture();
   //syphon.sendScreen();  
 }
@@ -124,64 +112,28 @@ float getDate(String date) {
   
 //壁面動画とムービングライトのしきい値
     if(pixie >= 30){
-     Playing_ID = 0;
-     OscMessage msg = new OscMessage("/sequence");
-   msg.add(255);
-   msg.add(0);
-   msg.add(0);
-   msg.add(0);
-   msg.add(0);
-     oscP5.send(msg, netAdd);
      successSound();
-     println("mv >>> "+ Playing_ID);
-     
+     Playing_ID = 1;  //水の映像
+
     }else if(pixie < 30 && pixie >= 15){
-     Playing_ID = 1;
-     OscMessage msg = new OscMessage("/sequence");
-   msg.add(0);
-   msg.add(255);
-   msg.add(0);
-   msg.add(0);
-   msg.add(0);
-     oscP5.send(msg, netAdd);
      successSound();
-     println("mv >>> "+ Playing_ID);
+     Playing_ID = 2;  //火の映像
      
     }else if(pixie < 15 && pixie > 0){
-     Playing_ID = 2;
-     OscMessage msg = new OscMessage("/sequence");
-   msg.add(0);
-   msg.add(0);
-   msg.add(255);
-   msg.add(0);
-   msg.add(0);
-     oscP5.send(msg, netAdd);
      successSound();
-     println("mv >>> "+ Playing_ID);
+     Playing_ID = 3;  //風の映像
      
     }else if(pixie == 0){
-     Playing_ID = 3;
-     OscMessage msg = new OscMessage("/sequence");
-   msg.add(0);
-   msg.add(0);
-   msg.add(0);
-   msg.add(255);
-   msg.add(0);
-     oscP5.send(msg, netAdd);
      successSound();
-     println("mv >>> "+ Playing_ID);
+     Playing_ID = 4;  //地の映像
      
     }else{
-     OscMessage msg = new OscMessage("/sequence");
-   msg.add(0);
-   msg.add(0);
-   msg.add(0);
-   msg.add(0);
-   msg.add(0);
-     oscP5.send(msg, netAdd);
      errorSound();
-     println("No Movie......");
+     Playing_ID = 0;  //ゼロ映像
   }  
+  
+  println("mv >>> "+ Playing_ID);
+
   return pixie;   
 }
 /*ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー*/
@@ -212,25 +164,31 @@ void keyPressed(){
   
 }
 
+//ゼロ映像ならループ、それ以外は一度だけ再生
 void playMovie(){
   mv[Playing_ID].stop();
-  mv[Playing_ID].noLoop();
+  if(Playing_ID == 0){
+    mv[Playing_ID].loop();
+  }else{
+    mv[Playing_ID].noLoop();
+  }
   mv[Playing_ID].jump(0);
   mv[Playing_ID].play();
 }
-
 
 boolean isPlaying() {
   return mv[Playing_ID].duration() - mv[Playing_ID].time() > 0.01;
 }
 
-boolean notPlaying() {
-  return mv[Playing_ID].duration() - mv[Playing_ID].time() == 0;
-}
+//boolean notPlaying() {
+//  return mv[Playing_ID].duration() - mv[Playing_ID].time() == 0;
+//}
 
 
 
 void sendOscIndex(){
+    //ゼロ映像時
+  if(Playing_ID == 0){
    OscMessage msg = new OscMessage("/sequence");
    msg.add(0);
    msg.add(0);
@@ -238,7 +196,48 @@ void sendOscIndex(){
    msg.add(0);
    msg.add(255);
    oscP5.send(msg, netAdd);
-   println("send Osc Index !!!");
+   println("zero movie!!!");
+   
+   //青:水
+  }else if(Playing_ID == 1){
+   OscMessage msg = new OscMessage("/sequence");
+   msg.add(255);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
+   oscP5.send(msg, netAdd);
+   
+   //赤:火
+  }else if(Playing_ID == 2){
+   OscMessage msg = new OscMessage("/sequence");
+   msg.add(0);
+   msg.add(255);
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
+   oscP5.send(msg, netAdd);
+   
+   //緑:風
+  }else if(Playing_ID == 3){
+   OscMessage msg = new OscMessage("/sequence");
+   msg.add(0);
+   msg.add(0);
+   msg.add(255);
+   msg.add(0);
+   msg.add(0);
+   oscP5.send(msg, netAdd);
+    
+    //白:地
+  }else if(Playing_ID == 4){
+   OscMessage msg = new OscMessage("/sequence");
+   msg.add(0);
+   msg.add(0);
+   msg.add(0);
+   msg.add(255);
+   msg.add(0);
+   oscP5.send(msg, netAdd);
+  }
 }
 
 void movieEvent(Movie m) {
@@ -251,19 +250,19 @@ void pushSound(){
   push_audio.rewind();
   push_audio.play();
   println("push!");
-  delay(50);
+  delay(10);
 }
 
 void errorSound(){
   error_audio.rewind();
   error_audio.play();
   println("error......");
-  delay(50);
+  delay(10);
 }
 
 void successSound(){
   success_audio.rewind();
   success_audio.play();
   println("success!!!!!!");
-  delay(50);
+  delay(10);
 }
