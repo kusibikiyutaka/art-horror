@@ -3,7 +3,7 @@
 #define Addr_Accl 0x19  // (JP1,JP2,JP3 = Openの時)
 
 //しきい値
-#define min_threshold 15
+#define min_threshold -18
 #define max_threshold 8.7
 
 // センサーの値を保存するグローバル関数
@@ -131,7 +131,7 @@ void showCoordinate(Coordinate c) {
 void serialSendValue(long val) {
 //  Serial.println(val);
 //  return;
-    if (val >= min_threshold) {
+    if (val <= min_threshold) {
       Serial.write(1);
       //Serial.print("ax Send Serial 1 !!!");
       delay(10);

@@ -68,7 +68,7 @@ void playRandomMovie() {
 }
 
 boolean isPlaying() {
-  return mv[Playing_ID].duration() - mv[Playing_ID].time() > 0;
+  return mv[Playing_ID].duration() - mv[Playing_ID].time() > 0.1;
 }
 
 int getRdmVideoIndex() {
