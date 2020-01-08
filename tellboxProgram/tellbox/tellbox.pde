@@ -29,7 +29,7 @@ import processing.video.*;
 
 
 Minim audio;
-AudioPlayer push_audio, error_audio, success_audio;
+AudioPlayer error_audio, success_audio, push_audio;
 OscP5 oscP5;
 NetAddress netAdd;
 Spout spout;
@@ -39,6 +39,7 @@ Movie mv[]=new Movie[4];
 int Playing_ID = -1;
 static final int USE_PORT = 0;
 boolean permitPlaying;
+
 //OscMessage osc[]=new OscMessage[4];
 
 
@@ -77,10 +78,9 @@ void setup(){
    //osc[0]=new OscMessage();
       
    audio = new Minim(this);  
-   push_audio = audio.loadFile("test.mp3");
    error_audio = audio.loadFile("error.mp3");
    success_audio = audio.loadFile("success.mp3");
-
+   
    frameRate(60);
    
    permitPlaying = false;
@@ -247,6 +247,7 @@ void movieEvent(Movie m) {
 }  
 
 void pushSound(){
+  push_audio = audio.loadFile(int(random(0,9))+".mp3");
   push_audio.rewind();
   push_audio.play();
   println("push!");
