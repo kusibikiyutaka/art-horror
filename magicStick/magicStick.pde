@@ -25,10 +25,10 @@ void setup() {
   // 櫛引のMacBookのシリアルポートは、　"/dev/cu.usbmodem14101"   Serial.list()[USE_PORT]
   arduinoSerial = new Serial(this, "/dev/cu.usbmodem14101", 115200);
 
-  mv[0]=new Movie(this, "hono.mp4");
-  mv[1]=new Movie(this, "kaze.mp4");
-  mv[2]=new Movie(this, "zimen.mp4");
-  mv[3]=new Movie(this, "mizu.mp4");
+  mv[0]=new Movie(this, "hono.mov");
+  mv[1]=new Movie(this, "denki.mov");
+  mv[2]=new Movie(this, "yami.mov");
+  mv[3]=new Movie(this, "mizu.mov");
   
   Playing_ID = getRdmVideoIndex();
   playRandomMovie();
