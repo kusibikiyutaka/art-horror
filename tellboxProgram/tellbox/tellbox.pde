@@ -84,18 +84,19 @@ void draw(){
   }
   
   //ゼロ映像が再生されてて、エンターキーを押したら、playMovie
-  if(permitPlaying && !isPlaying()){
+  if(permitPlaying){
       playMovie();
     }     
   permitPlaying = false;
- 
   
   if(isPlaying()){
     image(mv[Playing_ID], 0, 0);
     sendOscIndex();
     delay(10);
+    
   }else if(!isPlaying()){
-    image(mv[0], 0, 0);
+    permitPlaying = true;
+    Playing_ID = 0;
     sendOscIndex();
     delay(10);
   }
@@ -184,11 +185,7 @@ void keyPressed(){
 //ゼロ映像ならループ、それ以外は一度だけ再生
 void playMovie(){
   mv[Playing_ID].stop();
-  if(Playing_ID == 0){
-    mv[Playing_ID].loop();
-  }else{
-    mv[Playing_ID].noLoop();
-  }
+  mv[Playing_ID].noLoop();
   mv[Playing_ID].jump(0);
   mv[Playing_ID].play();
 }
@@ -204,57 +201,50 @@ boolean isPlaying() {
 
 
 void sendOscIndex(){
+  OscMessage msg = new OscMessage("/sequence");
+  
     //ゼロ映像時
   if(Playing_ID == 0){
-   OscMessage msg = new OscMessage("/sequence");
    msg.add(0);
    msg.add(0);
    msg.add(0);
    msg.add(0);
    msg.add(255);
-   oscP5.send(msg, netAdd);
-   println("zero movie!!!");
    
    //青:水
   }else if(Playing_ID == 1){
-   OscMessage msg = new OscMessage("/sequence");
    msg.add(255);
    msg.add(0);
    msg.add(0);
    msg.add(0);
    msg.add(0);
-   oscP5.send(msg, netAdd);
    
    //赤:火
   }else if(Playing_ID == 2){
-   OscMessage msg = new OscMessage("/sequence");
    msg.add(0);
    msg.add(255);
    msg.add(0);
    msg.add(0);
    msg.add(0);
-   oscP5.send(msg, netAdd);
    
    //緑:風
   }else if(Playing_ID == 3){
-   OscMessage msg = new OscMessage("/sequence");
    msg.add(0);
    msg.add(0);
    msg.add(255);
    msg.add(0);
    msg.add(0);
-   oscP5.send(msg, netAdd);
     
     //白:地
   }else if(Playing_ID == 4){
-   OscMessage msg = new OscMessage("/sequence");
    msg.add(0);
    msg.add(0);
    msg.add(0);
    msg.add(255);
    msg.add(0);
-   oscP5.send(msg, netAdd);
   }
+   oscP5.send(msg, netAdd);
+   println(Playing_ID + " 's Movie");
 }
 
 void movieEvent(Movie m) {
