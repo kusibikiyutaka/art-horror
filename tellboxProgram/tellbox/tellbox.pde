@@ -6,6 +6,16 @@
  tellbox code
    [json data、push key、switch movie、OSC、push sound]
  **/
+ 
+ /*
+ note
+   data
+  water 0411 1019
+  fire 0316 1023
+  wind 0116 1228
+  ground 1019 1226
+*/
+
 
 //Sound Library
 import ddf.minim.*;
