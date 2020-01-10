@@ -23,7 +23,7 @@ void setup() {
   
   // Serial connect
   // 櫛引のMacBookのシリアルポートは、　"/dev/cu.usbmodem14101"   Serial.list()[USE_PORT]
-  arduinoSerial = new Serial(this, "/dev/cu.usbmodem14101", 115200);
+  arduinoSerial = new Serial(this, "/dev/cu.usbmodem1112101", 9600);
 
   mv[0]=new Movie(this, "hono.mov");
   mv[1]=new Movie(this, "denki.mov");
