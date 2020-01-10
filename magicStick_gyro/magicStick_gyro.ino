@@ -30,7 +30,7 @@ void setup() {
    // Wire(Arduino-I2C)の初期化
     Wire.begin();
     // デバック用シリアル通信
-    Serial.begin(115200);
+    Serial.begin(9600);
     //BMX055 初期化
     BMX055_Init();
     delay(300);
