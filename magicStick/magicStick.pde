@@ -15,7 +15,7 @@ static final int USE_PORT = 1;
 
 
 void setup() {
-  fullScreen(2);
+  fullScreen(1);
   //size(1920, 1080);
   
   // draw serial list
