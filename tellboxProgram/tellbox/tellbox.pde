@@ -3,22 +3,22 @@
  * @auther MSLABO
  * @version 1.0 2019/01
  
- 電話ボックスのコード。
-   [jsonデータ、テンキー入力、動画の切り替え、ムービングライトのOSC通信、プッシュ音]
+ tellbox code
+   [json data、push key、switch movie、OSC、push sound]
  **/
 
-//音のライブラリ
+//Sound Library
 import ddf.minim.*;
 
-//ムービングライトへのOSC通信ライブラリ
+//OSC Library
 import oscP5.*;
 import netP5.*;
 
-//Resolumeへの通信ライブラリ(Windows:spout  OSX:syphon)
+//Library for Resolume(Windows:spout  OSX:syphon)
 import spout.*;
 //import codeanticode.syphon.*;
 
-//動画再生のライブラリ
+//Movie Library
 import processing.video.*;
 
 Minim audio;
@@ -39,11 +39,11 @@ boolean errorF = false;
 float alpha;
 boolean fadeMode;
 
-//日付データ
+//date data
 JSONObject jobject;
 String keys = "";
 
-//アウトプットする動画のサイズ
+//mv size
 float w = 4080, h = 768;
 
 void setup() {
@@ -54,10 +54,10 @@ void setup() {
   jobject = loadJSONObject("data.json");
 
   oscP5 = new OscP5(this, 10000);
-  //一台のPCで完結するIPアドレス。自身のIPアドレスを参照。
+  //IPAddress (All own PC Address is 127.0.0.1)
   netAdd = new NetAddress("127.0.0.1", 10000);
 
-  //パナソニック(1920*1080)、キャノン(1920*1200)
+  //Panasonic(1920*1080)、Canon(1920*1200)
   //4080(1360*3)*768
   size(4080, 768, P2D);
   
@@ -107,7 +107,7 @@ void draw() {
 
   sendOscIndex();
 
-  //フェードに使う手前の画面
+  //use fadeMode
   colorMode(RGB, 256);
   noStroke();
   fill(0, 0, 0, alpha);
@@ -119,7 +119,7 @@ void draw() {
 
 
 /*ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー*/
-// jsonデータを参照。return 0 > xの場合、値なし。
+// get json data. if return 0 > x, not value(pixie)
 float getDate(String date) {
   JSONArray jarray = jobject.getJSONArray("NAME");
   JSONObject datejobject = jobject.getJSONObject("DATE");
@@ -135,43 +135,44 @@ float getDate(String date) {
   println("pixie >> " + pixie);
   errorF = false;
 
-  //壁面動画とムービングライトのしきい値
+  //Threshold of mv and OSC
   //if (pixie >= 30) {
   // successSound();
-  // Playing_ID = 0; //水の映像
+  // Playing_ID = 0; //water
 
   //} else if (pixie < 30 && pixie >= 15) {
   // successSound();
-  // Playing_ID = 1; //火の映像
+  // Playing_ID = 1; //fire
 
   //} else if (pixie < 15 && pixie > 0) {
   // successSound();
-  // Playing_ID = 2; //風の映像
+  // Playing_ID = 2; //wind
 
   //} else if (pixie == 0) {
   // successSound();
-  // Playing_ID = 3; //地の映像
+  // Playing_ID = 3; //ground
   
-//壁面動画とムービングライトのしきい値
+  
+  //Threshold of mv and OSC
   if(pixie == 0){
    successSound();
-   Playing_ID = 1;  //水の映像
+   Playing_ID = 1;  //water
 
   }else if(pixie < 20 && pixie >= 10){
    successSound();
-   Playing_ID = 2;  //火の映像
+   Playing_ID = 2;  //fire
    
   }else if(pixie < 10 && pixie > 0){
    successSound();
-   Playing_ID = 3;  //風の映像
+   Playing_ID = 3;  //wind
    
   }else if(pixie >= 20){
    successSound();
-   Playing_ID = 4;  //地の映像
+   Playing_ID = 4;  //ground
 
   } else {
    errorSound();
-   //Playing_ID = 0; //ゼロ映像
+   //Playing_ID = 0; //zero mv
    elementPlayingF = false;
    errorF = true;
    playZeroMovie();
@@ -185,7 +186,7 @@ float getDate(String date) {
 
 
 
-//テンキーで数値入力
+//push number and ENTER
 void keyPressed() {
  switch (key) {
    case ENTER:
@@ -214,7 +215,7 @@ void keyPressed() {
 
 }
 
-//ゼロ映像ならループ、それ以外は一度だけ再生
+//if zero mv >>> loop, else >>> noLoop
 void playElementMovie() {
   mv[Playing_ID].stop();
   mv[Playing_ID].noLoop();
@@ -254,7 +255,7 @@ void sendOscIndex() {
    msg.add(255);
   }
 
-  //ゼロ映像時
+  //zero mv
   //if (Playing_ID == 0) {
   // msg.add(0);
   // msg.add(0);
@@ -262,7 +263,7 @@ void sendOscIndex() {
   // msg.add(0);
   // msg.add(255);
 
-   //青:水
+   //blue:water
   if (Playing_ID == 0) {
    msg.add(255);
    msg.add(0);
@@ -270,7 +271,7 @@ void sendOscIndex() {
    msg.add(0);
    msg.add(0);
 
-   //赤:火
+   //red:fire
   } else if (Playing_ID == 1) {
    msg.add(0);
    msg.add(255);
@@ -278,7 +279,7 @@ void sendOscIndex() {
    msg.add(0);
    msg.add(0);
 
-   //緑:風
+   //green:wind
   } else if (Playing_ID == 2) {
    msg.add(0);
    msg.add(0);
@@ -286,7 +287,7 @@ void sendOscIndex() {
    msg.add(0);
    msg.add(0);
 
-   //白:地
+   //white:ground
   } else if (Playing_ID == 3) {
    msg.add(0);
    msg.add(0);
@@ -300,7 +301,6 @@ void sendOscIndex() {
 }
 
 void movieEvent(Movie m) {
-  //カレント位置の動画を取得
   m.read();
 }
 
@@ -327,7 +327,7 @@ void successSound() {
 }
 
 
-//黒の画像がフェードインしてくる
+//fadeIn rect
 void fadeIn() {
   alpha += 6;
   //println("Movie fadeOut now...");
@@ -338,7 +338,7 @@ void fadeIn() {
   }
 }
 
-//黒の画像がフェードアウトしてくる
+//fadeOut rect
 void fadeOut() {
   //println("Movie fadeIn now...");
   alpha -= 6;
