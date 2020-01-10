@@ -129,19 +129,19 @@ float getDate(String date) {
   }  
   
 //壁面動画とムービングライトのしきい値
-    if(pixie >= 30){
+    if(pixie == 0){
      successSound();
      Playing_ID = 1;  //水の映像
 
-    }else if(pixie < 30 && pixie >= 15){
+    }else if(pixie < 20 && pixie >= 10){
      successSound();
      Playing_ID = 2;  //火の映像
      
-    }else if(pixie < 15 && pixie > 0){
+    }else if(pixie < 10 && pixie > 0){
      successSound();
      Playing_ID = 3;  //風の映像
      
-    }else if(pixie == 0){
+    }else if(pixie >= 20){
      successSound();
      Playing_ID = 4;  //地の映像
      
